@@ -1,0 +1,41 @@
+[
+	{
+		"id": 1,
+		"title": "Leche",
+		"description": "Contiene agua",
+		"code": "111",
+		"price": 23,
+		"status": true,
+		"stock": 2,
+		"category": "Bebidas",
+		"thumbnails": [
+			"milk.png"
+		]
+	},
+	{
+		"id": 2,
+		"title": "Agua",
+		"description": "Hidratacion",
+		"code": "414",
+		"price": 43,
+		"status": true,
+		"stock": 3,
+		"category": "Bebidas",
+		"thumbnails": [
+			"agua.png"
+		]
+	},
+	{
+		"id": 3,
+		"title": "Kiwi",
+		"description": "Kiwi Fresco",
+		"code": "7878",
+		"price": 45,
+		"status": true,
+		"stock": 19,
+		"category": "Frutas",
+		"thumbnails": [
+			"kiwi.png"
+		]
+	}
+]

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/api/public/css/styles_products.css">
+</head>
+
+<body>
+    <h1>Productos en la base de datos</h1>
+    <ul>
+        {{#each products}}
+        <li>
+            <p>Nombre: {{this.title}}</p>
+            <p>Descripción: {{this.description}}</p>
+            <p>Precio: {{this.price}}</p>
+            <p>Categoría: {{this.category}}</p>
+            <label for="cartSelect-{{this._id}}">Selecciona un carrito:</label>
+            <select id="cartSelect-{{this._id}}" class="select-cart">
+                <option value="">Selecciona un Carrito</option>
+                {{#each ../carts}}
+                <option value="{{this._id}}">{{this._id}}</option>
+                {{/each}}
+            </select>
+            <button class="add-to-cart" data-product-id="{{this._id}}">Agregar al Carrito</button>
+        </li>
+        {{/each}}
+    </ul>
+    <div>
+        {{#if pagination.prevLink}}
+            <a href="{{pagination.prevLink}}">Anterior Pagina</a>
+        {{/if}}
+        {{#if pagination.nextLink}}
+            <a href="{{pagination.nextLink}}">Siguiente Pagina</a>
+        {{/if}}
+    </div>
+</body>
+
+<script src="/api/public/js/product.js"></script>
