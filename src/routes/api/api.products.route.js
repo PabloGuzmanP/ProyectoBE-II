@@ -1,10 +1,11 @@
 import {Router} from "express";
 import ProductsManager from "../../managers/ProductsManager.js";
+import { checkAuth } from "../../middlewares/auth.middleware.js";
 
 const router = Router();
 const productsManager = new ProductsManager();
 
-router.get("/", async (req, res) => {
+router.get("/", checkAuth, async (req, res) => {
     const { limit = 10, page = 1, order = "asc", category } = req.query;
 
     try {
@@ -36,14 +37,14 @@ router.get("/", async (req, res) => {
 });
 
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", checkAuth, async (req, res) => {
     const {id} = req.params;
 
     const getProduct = await productsManager.getOneById(id);
     res.status(200).send({status: "success", data:getProduct})
 });
 
-router.post("/", async (req, res) => {
+router.post("/", checkAuth, async (req, res) => {
     try {
         const newProduct = req.body;
         const result = await productsManager.addProduct(newProduct);
@@ -54,7 +55,7 @@ router.post("/", async (req, res) => {
     }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", checkAuth, async (req, res) => {
     const {id} = req.params;
     const updateFields= req.body;
 
@@ -68,7 +69,7 @@ router.put("/:id", async (req, res) => {
     
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", checkAuth, async (req, res) => {
     const { id } = req.params;
     try {
         await productsManager.deleteProduct(id);

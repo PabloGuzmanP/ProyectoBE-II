@@ -1,12 +1,13 @@
 import { Router } from "express";
 import CartsManager from "../../managers/CartsManager.js";
+import { checkAuth } from "../../middlewares/auth.middleware.js";
 
 
 const router = Router();
 const cartsManager = new CartsManager();
 
 // ------------------------------ MONGO ---------------------------------------------------------
-router.get("/", async (req, res) => {
+router.get("/", checkAuth,async (req, res) => {
     try {
         const cartsFound = await cartsManager.getAll();
         res.status(200).json({ status: true, payload: cartsFound});
@@ -16,7 +17,7 @@ router.get("/", async (req, res) => {
 });
 
 // CREAR UN NUEVO CARRITO
-router.post("/", async (req, res) => {
+router.post("/", checkAuth, async (req, res) => {
     try {
         const newCart = await cartsManager.insertOne();
         res.status(200).send({ message: "Carrito agregado", payload: newCart });
@@ -25,7 +26,7 @@ router.post("/", async (req, res) => {
     }
 });
 // INSERTAR UNA CANTIDAD DE UN PRODUCTO A UN CARRITO
-router.post("/:cid/product/:pid", async (req, res) => {
+router.post("/:cid/product/:pid", checkAuth, async (req, res) => {
     const {cid, pid} = req.params;
     const {quantity} = req.body;
 
@@ -42,7 +43,7 @@ router.post("/:cid/product/:pid", async (req, res) => {
 });
 
 // ELIMINAR UN CARRITO
-router.delete("/:cid", async (req, res) => {
+router.delete("/:cid", checkAuth, async (req, res) => {
     const {cid} = req.params;
     if(!cid){
         return res.status(400).send({"error": "Faltan datos."});
@@ -57,7 +58,7 @@ router.delete("/:cid", async (req, res) => {
 })
 
 // ELIMINAR DEL CARRITO UN PRODUCTO SELECCIONADO
-router.delete("/:cid/products/:pid", async (req, res) => {
+router.delete("/:cid/products/:pid", checkAuth, async (req, res) => {
     const {cid, pid} = req.params;
     if(!cid || !pid){
         return res.status(400).send({"error": "Faltan datos."});
@@ -72,7 +73,7 @@ router.delete("/:cid/products/:pid", async (req, res) => {
 });
 
 // ACTUALIZAR EL CARRITO CON UN ARREGLO
-router.put("/:cid", async (req, res) => {
+router.put("/:cid", checkAuth, async (req, res) => {
     const {cid} = req.params;
     const {products} = req.body;
     if(!cid || !products){
@@ -88,7 +89,7 @@ router.put("/:cid", async (req, res) => {
 });
 
 // ACTUALIZAR LA CANTIDAD DE EJEMPLARES DEL PRODUCTO
-router.put("/:cid/products/:pid", async (req, res) =>{
+router.put("/:cid/products/:pid", checkAuth, async (req, res) =>{
     const {cid, pid} = req.params;
     const {quantity} = req.body;
 
@@ -105,7 +106,7 @@ router.put("/:cid/products/:pid", async (req, res) =>{
 });
 
 // ELIMINAR PRODUCTOS DEL CARRITO
-router.delete("/cart/:cid", async (req, res) => {
+router.delete("/cart/:cid", checkAuth, async (req, res) => {
     const {cid} = req.params;
     if(!cid){
         return res.status(400).send({"error": "Faltan datos."});
@@ -120,7 +121,7 @@ router.delete("/cart/:cid", async (req, res) => {
 });
 
 // METODO GET CON POPULATE
-router.get("/:cid", async (req, res) => {
+router.get("/:cid", checkAuth, async (req, res) => {
     const {cid} = req.params;
     if(!cid){
         return res.status(400).send({"error": "Faltan datos."});
@@ -134,7 +135,7 @@ router.get("/:cid", async (req, res) => {
     }
 });
 
-router.post('/:cid/addProduct', async (req, res) => {
+router.post('/:cid/addProduct', checkAuth, async (req, res) => {
     const { cid } = req.params;
     const { productId, quantity } = req.body;
 

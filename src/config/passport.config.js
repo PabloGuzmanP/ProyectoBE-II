@@ -12,7 +12,7 @@ export const config = (server) => {
 
     const handleLogin = async (payload, done) => {
         try {
-            const userFound = await userManager.getOneByID(passport.id);
+            const userFound = await userManager.getOneByID(payload.id);
             return done(null, userFound);
         } catch (error) {
             done (null, false, { message: error.message });
