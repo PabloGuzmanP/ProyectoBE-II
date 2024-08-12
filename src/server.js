@@ -11,6 +11,7 @@ import apiAuthRouter from "./routes/api/api.auth.route.js";
 import apiProductsRouter from "./routes/api/api.products.route.js";
 import apiCartsRouter from "./routes/api/api.carts.route.js";
 import apiUsersRouter from "./routes/api/api.users.route.js"
+import apiSessionRouter from "./routes/api/api.sessions.route.js"
 
 import serverSocketIO from "./config/socket.config.js";
 import handlebarsConfig from "./config/handlebars.config.js";
@@ -41,6 +42,7 @@ server.use("/api/auth", apiAuthRouter);
 server.use("/api/carts", apiCartsRouter);
 server.use("/api/products", apiProductsRouter);
 server.use("/api/users", apiUsersRouter);
+server.use("/api/sessions", apiSessionRouter)
 
 
 server.use("/api/public", express.static(path.public));

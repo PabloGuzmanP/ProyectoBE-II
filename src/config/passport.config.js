@@ -21,5 +21,28 @@ export const config = (server) => {
 
     passport.use("jwt-api", new JwtStrategy(jwtApiOptions, handleLogin));
 
+    const cookieExtractor = req => {
+        let token = null;
+        if(req && req.cookies){
+            token = req.cookies["cookieToken"]
+        }        
+        return token;
+    }
+
+    const jwtExtractCookie = {
+        jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
+        secretOrKey: process.env.SECRET_KEY
+    };
+
+    const handleDataUser = async (payload, done) => {
+        try {
+            return done(null, payload); 
+        } catch (error) {
+            done (null, false, { message: error.message });
+        }
+    };
+
+    passport.use("current", new JwtStrategy(jwtExtractCookie, handleDataUser));
+
     server.use(passport.initialize());
 }

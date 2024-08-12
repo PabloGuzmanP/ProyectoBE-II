@@ -46,13 +46,13 @@ const userSchema = new Schema({
         required: true,
     },
     role: {
-        type: [String],
+        type: String,
         uppercase: true,
         enum: {
             values: ROLES,
             message: "Rol no válido",
         },
-        default: [USER], // El valor por defecto es "USER"
+        default: USER, // El valor por defecto es "USER"
     },
 }, {
     timestamps: true,

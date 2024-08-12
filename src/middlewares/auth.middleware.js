@@ -11,7 +11,7 @@ export const generateToken = async (req, res, next) => {
 
         const userFound = await userManager.getOneByEMailAndPassword(email, password);
 
-        const token = jwt.sign({ id: userFound._id }, process.env.SECRET_KEY, { expiresIn: "2h" });
+        const token = jwt.sign({ id: userFound._id, firts_name: userFound.first_name, last_name: userFound.last_name, email: userFound.email, role: userFound.role }, process.env.SECRET_KEY, { expiresIn: "2h" });
 
         req.token = token;
         next();
@@ -31,9 +31,14 @@ export const checkAuth = async (req, res, next) => {
     })(req, res, next);
 };
 
-export const checkRoleAdmin = async (req, res, next) => {
-    if(req.role !== "admin"){
-        return next(new Error(ERROR_NOT_HAVE_PRIVILEGES));
-    }
-    next();
-};
+export const currentUser = async (req, res, next) => {
+    passport.authenticate("current", { session: false }, (error, user, info) =>{
+        if(error) return next(error);
+
+        if(!user) return next(new Error(JWT_TRANSLATIONS[info.message] ?? info.message));
+        
+        req.user = user
+        next();
+        
+    })(req, res, next);
+}
