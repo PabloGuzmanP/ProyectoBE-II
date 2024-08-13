@@ -25,8 +25,8 @@ export const checkAuth = async (req, res, next) => {
         if(error) return next(error);
 
         if(!user) return next(new Error(JWT_TRANSLATIONS[info.message] ?? info.message));
-
-        req.role = user.role
+        
+        req.roles = user.roles;
         next();
     })(req, res, next);
 };

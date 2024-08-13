@@ -2,17 +2,20 @@ import express from"express";
 import path from "./utils/path.js";
 import cookieParser from "cookie-parser";
 
-import homeRouter from "./routes/app/app.home.route.js";
-import realTimeProductsRouter from "./routes/app/app.realTimeProducts.route.js";
-import productsRouter from "./routes/app/app.products.route.js";
-import cartRouter from "./routes/app/app.cart.route.js";
+// Imports APP
+import homeRouter from "./routers/app/app.home.router.js";
+import realTimeProductsRouter from "./routers/app/app.realTimeProducts.router.js";
+import productsRouter from "./routers/app/app.products.router.js";
+import cartRouter from "./routers/app/app.cart.router.js";
 
-import apiAuthRouter from "./routes/api/api.auth.route.js";
-import apiProductsRouter from "./routes/api/api.products.route.js";
-import apiCartsRouter from "./routes/api/api.carts.route.js";
-import apiUsersRouter from "./routes/api/api.users.route.js"
-import apiSessionRouter from "./routes/api/api.sessions.route.js"
+// Imports API
+import apiAuthRouter from "./routers/api/api.auth.router.js";
+import apiCartsRouter from "./routers/api/api.carts.router.js";
+import apiProductsRouter from "./routers/api/api.products.router.js";
+import apiUsersRouter from "./routers/api/api.users.router.js";
+import apiSessionRouter from "./routers/api/api.sessions.router.js";
 
+// Imports Configurations
 import serverSocketIO from "./config/socket.config.js";
 import handlebarsConfig from "./config/handlebars.config.js";
 import mongoDB from "./config/mongoose.config.js";
@@ -32,17 +35,17 @@ handlebarsConfig.config(server);
 configPassport(server);
 
 // Rutas de la aplicación 
-server.use("/", homeRouter);
-server.use("/real-time-products", realTimeProductsRouter);
-server.use("/products", productsRouter);
-server.use("/cart-products", cartRouter);
+server.use("/", new homeRouter().getRouter());
+server.use("/real-time-products", new realTimeProductsRouter().getRouter());
+server.use("/products", new productsRouter().getRouter());
+server.use("/cart-products", new cartRouter().getRouter());
 
 // Rutas de la API
-server.use("/api/auth", apiAuthRouter);
-server.use("/api/carts", apiCartsRouter);
-server.use("/api/products", apiProductsRouter);
-server.use("/api/users", apiUsersRouter);
-server.use("/api/sessions", apiSessionRouter)
+server.use("/api/auth", new apiAuthRouter().getRouter());
+server.use("/api/carts", new apiCartsRouter().getRouter());
+server.use("/api/products", new apiProductsRouter().getRouter());
+server.use("/api/users", new apiUsersRouter().getRouter());
+server.use("/api/sessions", new apiSessionRouter().getRouter());
 
 
 server.use("/api/public", express.static(path.public));

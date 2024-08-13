@@ -45,14 +45,14 @@ const userSchema = new Schema({
         ref: "carts",
         required: true,
     },
-    role: {
-        type: String,
+    roles: {
+        type: [ String ],
         uppercase: true,
         enum: {
             values: ROLES,
             message: "Rol no válido",
         },
-        default: USER, // El valor por defecto es "USER"
+        default: [ USER ], // El valor por defecto es "USER"
     },
 }, {
     timestamps: true,
