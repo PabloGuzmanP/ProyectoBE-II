@@ -1,13 +1,16 @@
 import BaseRouter from "../base.router.js";
-import ProductsManager from "../../managers/ProductsManager.js";
+// import ProductsManager from "../../managers/ProductsManager.js";
+import ProductService from "../../services/product.service.js";
 
 export default class ProductsRouter extends BaseRouter {
-    #productsManager;
+    #productsService
+    // #productsManager;
 
     constructor() {
         super();
         this.initialize();
-        this.#productsManager = new ProductsManager();
+        // this.#productsManager = new ProductsManager();
+        this.#productsService = new ProductService();
     }
 
     initialize() {
@@ -17,7 +20,7 @@ export default class ProductsRouter extends BaseRouter {
     async #getAll(req, res) {
         const { id } = req.params;
 
-        const productFound = await this.#productsManager.getOneById(id);
+        const productFound = await this.#productsService.getOneById(id);
         const product = {
             title: productFound.title,
             description: productFound.description,

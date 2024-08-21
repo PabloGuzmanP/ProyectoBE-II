@@ -1,15 +1,22 @@
 import BaseRouter from "../base.router.js";
-import ProductsManager from "../../managers/ProductsManager.js";
-import CartsManager from "../../managers/CartsManager.js";
+// import ProductsManager from "../../managers/ProductsManager.js";
+// import CartsManager from "../../managers/CartsManager.js";
+import ProductService from "../../services/product.service.js";
+import CartService from "../../services/cart.service.js";
 
 export default class HomeRouter extends BaseRouter {
-    #productsManager;
-    #cartsManager;
+    // #productsManager;
+    // #cartsManager;
+
+    #productsService
+    #cartsService
 
     constructor() {
         super();
-        this.#productsManager = new ProductsManager();
-        this.#cartsManager = new CartsManager();
+        // this.#productsManager = new ProductsManager();
+        // this.#cartsManager = new CartsManager();
+        this.#productsService = new ProductService();
+        this.#cartsService = new CartService();
         this.initialize;
     }
 
@@ -32,9 +39,9 @@ export default class HomeRouter extends BaseRouter {
             const sort = { field: "price", order: order === "desc" ? -1 : 1 };
             const query = category ? { category } : {};
 
-            const productsFound = await this.#productsManager.getAll(parsedLimit, parsedPage, query, sort);
+            const productsFound = await this.#productsService.getAll(parsedLimit, parsedPage, query, sort);
 
-            const carts = await this.#cartsManager.getAll();
+            const carts = await this.#cartsService.getAll();
             const cartsWithStringIds = carts.map(cart => ({
                 ...cart.toObject(),
                 _id: cart._id.toString()

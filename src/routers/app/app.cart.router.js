@@ -1,13 +1,16 @@
 import BaseRouter from "../base.router.js";
-import CartsManager from "../../managers/CartsManager.js";
+// import CartsManager from "../../managers/CartsManager.js";
+import CartService from "../../services/cart.service.js";
 
 export default class CartRouter extends BaseRouter {
-    #cartsManager;
+    // #cartsManager;
+    #cartsService
 
     constructor() {
         super();
         this.initialize();
-        this.#cartsManager = new CartsManager();
+        // this.#cartsManager = new CartsManager();
+        this.#cartsService = new CartService();
     }
 
     initialize() {
@@ -23,7 +26,7 @@ export default class CartRouter extends BaseRouter {
         }
 
         try {
-            const cart = await this.#cartsManager.getCartById(cid);
+            const cart = await this.#cartsService.getCartById(cid);
 
             if (order) {
                 cart.products.sort((asc, desc) => {

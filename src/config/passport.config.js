@@ -1,8 +1,8 @@
 import passport from "passport";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
-import UserManager from "../managers/UsersManager.js"
+import UserService from "../services/user.service.js";
 
-const userManager = new UserManager();
+const userService = new UserService();
 
 export const config = (server) => {
     const jwtApiOptions = {
@@ -12,7 +12,7 @@ export const config = (server) => {
 
     const handleLogin = async (payload, done) => {
         try {
-            const userFound = await userManager.getOneByID(payload.id);
+            const userFound = await userService.getOneByID(payload.id);
             return done(null, userFound);
         } catch (error) {
             done (null, false, { message: error.message });
