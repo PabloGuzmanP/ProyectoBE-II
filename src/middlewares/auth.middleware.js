@@ -1,10 +1,8 @@
 import jwt from "jsonwebtoken";
 import passport from "passport";
-// import UserManager from "../managers/UsersManager.js"
 import UserService from "../services/user.service.js";
 import { ERROR_NOT_HAVE_PRIVILEGES, JWT_TRANSLATIONS } from "../constants/messages.constant.js";
 
-// const userManager = new UserManager();
 const userService = new UserService();
 
 export const generateToken = async (req, res, next) => {

@@ -1,9 +1,6 @@
 import { Server } from "socket.io";
-import products from "../product.js"
-// import ProductsManager from "../managers/ProductsManager.js";
 import ProductService from "../services/product.service.js";
 
-// const productsManager = new ProductsManager();
 const productsService = new ProductService();
 
 const config = (serverHTTP) => {
