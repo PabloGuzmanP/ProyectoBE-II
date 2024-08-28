@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 import paginate from "mongoose-paginate-v2";
-import { USER, ROLES } from "../constants/roles.constant.js";
+import { USER, ROLES } from "../../../constants/roles.constant.js";
 
 const userSchema = new Schema({
     first_name:{

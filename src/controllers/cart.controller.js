@@ -9,7 +9,7 @@ export default class CartController {
 
     async getAll(req, res){
         try {        
-            const cartsFound = await this.#cartService.getAll();    
+            const cartsFound = await this.#cartService.findAll(req.query);    
             res.sendSuccess200(cartsFound);
         } catch (error) {
             res.sendError(error);
@@ -46,7 +46,7 @@ export default class CartController {
             return res.status(400).send({ "error": "Faltan datos." });
         }
         try {
-            const deleteCart = await this.#cartService.deleteCart(cid);
+            const deleteCart = await this.#cartService.deleteOneById(cid);
             res.sendSuccess200(deleteCart);
         } catch (error) {
             res.sendError(error);
@@ -73,7 +73,7 @@ export default class CartController {
             return res.status(400).send({"error": "Faltan datos."});
         }
         try {
-            const updateCart = await this.#cartService.updateCart(cid, products);
+            const updateCart = await this.#cartService.updateOneById(cid, products);
             res.sendSuccess200(updateCart);
         } catch (error) {
             res.sendError(error);
@@ -88,7 +88,7 @@ export default class CartController {
             return res.status(400).send({"error": "Faltan datos."});
         }
         try {
-            const updateQuantity = await this.#cartService.updateQuantity(cid, pid, Number(quantity));
+            const updateQuantity = await this.#cartService.updateQuantity(cid, pid, quantity);
             res.sendSuccess200(updateQuantity);
         } catch (error) {
             res.sendError(error);

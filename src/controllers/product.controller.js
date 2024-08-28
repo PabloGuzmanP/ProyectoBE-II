@@ -7,31 +7,10 @@ export default class ProductController {
         this.#productService = new ProductService();
     }
 
-    async getAll(req, res){
-        const { limit = 10, page = 1, order = "asc", category } = req.query;
+    async getAll(req, res) {
         try {
-            const parsedLimit = parseInt(limit, 10);
-            const parsedPage = parseInt(page, 10);
-            const sort = { field: "price", order: order === "desc" ? -1 : 1 };
-            const query = category ? { category } : {};
-
-            const productsFound = await this.#productService.getAll(parsedLimit, parsedPage, query, sort);
-
-            const buildLink = (page) => {
-                let link = `${req.protocol}://${req.get('host')}${req.originalUrl.split('?')[0]}?limit=${parsedLimit}&page=${page}`;
-                if (order) {
-                    link += `&order=${order}`;
-                }
-                if (category) {
-                    link += `&category=${encodeURIComponent(category)}`;
-                }
-                return link;
-            }
-
-            const prevLink = productsFound.hasPrevPage ? buildLink(productsFound.prevPage) : null;
-            const nextLink = productsFound.hasNextPage ? buildLink(productsFound.nextPage) : null;
-
-            res.sendSuccess200({ ...productsFound, prevLink, nextLink });
+            const recipes = await this.#productService.findAll(req.query);
+            res.sendSuccess200(recipes);
         } catch (error) {
             res.sendError(error);
         }
@@ -40,7 +19,7 @@ export default class ProductController {
     async getProductById(req, res){
         const { id } = req.params;
         try {
-            const productFound = await this.#productService.getOneById(id);
+            const productFound = await this.#productService.findOneById(id);
             res.sendSuccess200(productFound);
         } catch (error) {
             res.sendError(error);
@@ -50,7 +29,7 @@ export default class ProductController {
     async createProduct(req, res){
         try {
             const newProduct = req.body
-            const result = await this.#productService.addProduct(newProduct);
+            const result = await this.#productService.insertOne(newProduct);
             res.sendSuccess201(result);
         } catch (error) {
             res.sendError(error);
@@ -61,7 +40,7 @@ export default class ProductController {
         const { id } = req.params;
         const updateFields = req.body;
         try {
-            const updateProduct = await this.#productService.updatedProduct(id, updateFields);
+            const updateProduct = await this.#productService.updateOneById(id, updateFields);
             if(!updateFields){
                 res.status(404).send({ error: "Producto no encontrado" });
             } else {
@@ -76,7 +55,7 @@ export default class ProductController {
         const { id } = req.params;
 
         try {
-            const deleteProduct = await this.#productService.deleteProduct(id);
+            const deleteProduct = await this.#productService.deleteOneById(id);
             res.sendSuccess200(deleteProduct);
         } catch (error) {
             res.sendError(error);

@@ -9,8 +9,8 @@ export default class UserController {
 
     async getAll(req, res) {
         try {
-            const usersFound = await this.#userService.getAll();
-            res.sendSuccess200(usersFound);
+            const users = await this.#userService.findAll(req.query);
+            res.sendSuccess200(users);
         } catch (error) {
             res.sendError(error);
         }
@@ -19,15 +19,15 @@ export default class UserController {
     async getUserById(req, res) {
         const { id } = req.params;
         try {
-            const userFound = await this.#userService.getOneByID(id);
-            res.sendSuccess200(userFound);
+            const user = await this.#userService.findOneById(id);
+            res.sendSuccess200(user);
         } catch (error) {
             res.sendError(error);
         }
     }
 
     async createUser(req, res){
-        try {
+        try {        
             const user = await this.#userService.insertOne(req.body);
             res.sendSuccess201(user);
         } catch (error) {

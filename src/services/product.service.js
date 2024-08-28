@@ -1,45 +1,39 @@
-import ProductDAO from "../daos/product.dao.js";
+// import ProductDAO from "../daos/product.dao.js";
+import ProductRepository from "../repositories/product.repository.js";
 
 export default class ProductService {
-    #productDAO
+    #productRepository;
 
     constructor(){
-        this.#productDAO = new ProductDAO();
+        this.#productRepository = new ProductRepository();
     }
 
-    async getAll(limit = 10, page = 1, query = {}, sort){
-        const products = await this.#productDAO.getAll(limit = 10, page = 1, query = {}, sort);
-        return products;
+    async findAll(params){
+        return await this.#productRepository.findAll(params);
     }
 
-    async getOneById(id){
-        const product = await this.#productDAO.getOneById(id);
+    async findOneById(id){
+        return await this.#productRepository.findOneById(id);
+    }
+
+    async insertOne(data){
+        return await this.#productRepository.save({
+            ...data,
+        });
+    }
+
+    async updateOneById(id, data){
+        const currentProduct = await this.#productRepository.findOneById(id);
+
+        const product = await this.#productRepository.save({
+            ...currentProduct,
+            ...data,
+        });
+
         return product;
     }
 
-    async getProducts(){
-        const products = await this.#productDAO.getProducts();
-        return products;
-    }
-
-    async addProduct(productData){
-        const newProduct = new this.#productDAO.addProduct(productData);
-        return newProduct;
-    }
-
-    async deleteProduct(id){
-        const deleteProduct = await this.#productDAO.deleteProduct(id);
-        if (!deleteProduct) {
-            throw new Error("Producto no encontrado");
-        }
-        return deleteProduct;
-    }
-
-    async updatedProduct(id, data){
-        const productUpdated = await this.#productDAO.updatedProduct(id, data);
-        if(!productUpdated) {
-            throw new Error("Producto no encontrado");
-        }
-        return productUpdated;
+    async deleteOneById(id){
+        return await this.#productRepository.deleteOneById(id);
     }
 }

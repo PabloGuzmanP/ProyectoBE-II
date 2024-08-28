@@ -1,38 +1,40 @@
-import UserDAO from "../daos/user.dao.js";
+import UserRepository from "../repositories/user.repository.js";
 
 export default class UserService {
-    #userDAO
+    #userRepository
 
     constructor(){
-        this.#userDAO = new UserDAO();
+        this.#userRepository = new UserRepository();
     }
 
-    async getAll(limit = 10, page = 1){
-        return await this.#userDAO.getAll(limit = 10, page = 1);
+    async findAll(paramFilters) {
+        const $and = [];
+
+        if (paramFilters?.name) $and.push({ name: { $regex: paramFilters.name, $options: "i" } });
+        const filters = $and.length > 0 ? { $and } : {};
+
+        return await this.#userRepository.findAll(filters);
     }
 
-    async getOneByID(id){
-        const user = this.#userDAO.getOneByID(id);
-        return user;
+    async findOneById(id) {
+        return await this.#userRepository.findOneById(id);
     }
 
-    async getOneByEmailAndPassword(email, password){
-        const userFound = this.#userDAO.getOneByEmailAndPassword(email, password);
-        return userFound;
+    async findOneByEmailAndPassword(email, password) {
+        return await this.#userRepository.findOneByEmailAndPassword(email, password);
     }
 
-    async insertOne(data){
-        const userCreate = this.#userDAO.insertOne(data);
-        return userCreate;
+    async insertOne(data) {
+        return await this.#userRepository.save(data);
     }
 
-    async updateOneById(id, data){
-        const userUpdate = this.#userDAO.updateOneById(id, data);
-        return userUpdate;
+    async updateOneById(id, data) {
+        const user = await this.#userRepository.findOneById(id);
+        const newValues = { ...user, ...data };
+        return await this.#userRepository.save(newValues);
     }
 
-    async deleteOneById(id){
-        const userDelete = this.#userDAO.deleteOneById(id);
-        return userDelete;
+    async deleteOneById(id) {
+        return await this.#userRepository.deleteOneById(id);
     }
 }
