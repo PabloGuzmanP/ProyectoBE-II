@@ -18,7 +18,7 @@ export default class CartController {
 
     async createCart(req, res) {
         try {
-            const newCart = await this.#cartService.insertOne();
+            const newCart = await this.#cartService.insertOne(req.body);
             res.sendSuccess201(newCart);
         } catch (error) {
             res.sendError(error);

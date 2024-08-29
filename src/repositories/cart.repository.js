@@ -103,8 +103,8 @@ export default class CartRepository {
     //     return updatedCart;
     // }
 
-    // async getCartById(cid){
-    //     const cart = await this.findById(cid).populate("products.productId");
-    //     return cart;
-    // }
+    async getCartById(cid){
+        const cart = await this.#cartDAO.findOneByIdWithPopulate(cid);
+        return cart;
+    }
 }

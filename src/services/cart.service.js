@@ -4,25 +4,23 @@ import CartRepository from "../repositories/cart.repository.js";
 export default class CartService {
     #cartRepository
 
-    constructor(){
+    constructor() {
         this.#cartRepository = new CartRepository();
     }
 
-    async findAll(params){
+    async findAll(params) {
         return await this.#cartRepository.findAll(params);
     }
 
-    async findOneById(id){
+    async findOneById(id) {
         return await this.#cartRepository.findOneById(id).populate("products.productId");
     }
 
-    async insertOne(data){
-        return await this.#cartRepository.save({
-            ...data,
-        });
+    async insertOne(data) {
+        return await this.#cartRepository.save({ ...data });
     }
 
-    async addProductToCart(cid, pid, quantity){
+    async addProductToCart(cid, pid, quantity) {
         const cart = await this.#cartRepository.findOneById(cid);
         const productIndex = cart.products.findIndex(p => p.productId.toString() === pid);
         if (productIndex !== -1) {
@@ -34,17 +32,17 @@ export default class CartService {
         return await this.#cartRepository.save(cart);
     }
 
-    async deleteOneById(id){
+    async deleteOneById(id) {
         return await this.#cartRepository.deleteOneById(id);
     }
 
-    async deleteProductOfCart(cid, pid, quantity){
+    async deleteProductOfCart(cid, pid, quantity) {
         const cart = await this.#cartRepository.findOneById(cid);
         const productIndex = cart.products.findIndex(p => p.productId.toString() === pid);
-        if(productIndex < 0) throw new Error(ERROR_NOT_FOUND_INDEX);
-        
+        if (productIndex < 0) throw new Error(ERROR_NOT_FOUND_INDEX);
 
-        if(cart.products[productIndex].quantity > quantity){
+
+        if (cart.products[productIndex].quantity > quantity) {
             cart.products[productIndex].quantity -= quantity;
         } else {
             cart.products.splice(productIndex, 1);
@@ -54,33 +52,43 @@ export default class CartService {
     }
 
 
-    async updateOneById(cid, products){
+    async updateOneById(cid, newProducts) {
         const cart = await this.#cartRepository.findOneById(cid);
-        const newValues = { ...cart, ...products };
-        return await this.#cartRepository.save(newValues);
+
+        const existingProductsMap = new Map(cart.products.map(product => [product.productId.toString(), product]));
+        newProducts.forEach(newProduct => {
+            const existingProduct = existingProductsMap.get(newProduct.productId);
+            if (existingProduct) {
+                existingProduct.quantity += newProduct.quantity;
+            } else {
+                cart.products.push(newProduct);
+            }
+        });
+
+        return await this.#cartRepository.save(cart);
     }
 
-    async updateQuantity(cid, pid, quantity){
+    async updateQuantity(cid, pid, quantity) {
         const cart = await this.#cartRepository.findOneById(cid);
         const productIndex = cart.products.findIndex(p => p.productId.toString() === pid);
-        if(productIndex !== -1){
+        if (productIndex !== -1) {
             cart.products[productIndex].quantity = quantity;
-        }else {
-            cart.products.push({productId: pid, quantity: quantity});
+        } else {
+            cart.products.push({ productId: pid, quantity: quantity });
         }
 
         return await this.#cartRepository.save(cart);
     }
 
-    async deleteProductsCart(cid){
+    async deleteProductsCart(cid) {
         const cart = await this.#cartRepository.findOneById(cid);
         cart.products = [];
 
         return await this.#cartRepository.save(cart);
     }
 
-    async getCartById(cid){
-        const cart = await this.#cartRepository.getCartById(cid).populate("products.productId");
+    async getCartById(cid) {
+        const cart = await this.#cartRepository.getCartById(cid);
         return cart;
     }
 }

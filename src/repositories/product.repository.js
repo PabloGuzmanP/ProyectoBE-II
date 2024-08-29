@@ -16,7 +16,7 @@ export default class ProductRepository {
     async findAll(params) {
         const $and = [];
 
-        if (params?.title) $and.push({ title: { $regex: params.title, $options: "i" } });
+        if (params?.category) $and.push({ category: { $regex: params.category, $options: "i" } });
         const filters = $and.length > 0 ? { $and } : {};
 
         const products = await this.#productDAO.findAll(filters, params);

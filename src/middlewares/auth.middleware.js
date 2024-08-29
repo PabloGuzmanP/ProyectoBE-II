@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import passport from "passport";
 import UserService from "../services/user.service.js";
-import { ERROR_NOT_HAVE_PRIVILEGES, JWT_TRANSLATIONS } from "../constants/messages.constant.js";
+import { JWT_TRANSLATIONS } from "../constants/messages.constant.js";
 
 const userService = new UserService();
 
@@ -9,9 +9,9 @@ export const generateToken = async (req, res, next) => {
     try {
         const { email, password } = req.body;
 
-        const userFound = await userService.getOneByEmailAndPassword(email, password);
+        const userFound = await userService.findOneByEmailAndPassword(email, password);
 
-        const token = jwt.sign({ id: userFound._id, firts_name: userFound.first_name, last_name: userFound.last_name, email: userFound.email, role: userFound.role }, process.env.SECRET_KEY, { expiresIn: "2h" });
+        const token = jwt.sign({ id: userFound.id, full_name: userFound.fullname, email: userFound.email, roles: userFound.roles }, process.env.SECRET_KEY, { expiresIn: "2h" });
 
         req.token = token;
         next();

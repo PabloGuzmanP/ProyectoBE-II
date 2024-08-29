@@ -27,8 +27,12 @@ export default class MongoDAO {
     }
 
     async findOneByCriteria(criteria){
-        return await this.#model.find(criteria);
+        return await this.#model.findOne(criteria);
     }
+
+    async findOneByIdWithPopulate(id) {
+        return await this.#model.findById(id).populate("products.productId");
+    }    
 
     async save(data) {
         if(data.id){

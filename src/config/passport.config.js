@@ -12,7 +12,9 @@ export const config = (server) => {
 
     const handleLogin = async (payload, done) => {
         try {
-            const userFound = await userService.getOneByID(payload.id);
+            console.log(payload);
+            
+            const userFound = await userService.findOneById(payload.id);
             return done(null, userFound);
         } catch (error) {
             done (null, false, { message: error.message });
