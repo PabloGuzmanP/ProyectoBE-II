@@ -13,17 +13,36 @@ export default class ProductRepository {
         this.#productDTO = new ProductDTO();
     }
 
+
     async findAll(params) {
+        const { page = 1, limit = 10, ...filters } = params;
         const $and = [];
 
-        if (params?.category) $and.push({ category: { $regex: params.category, $options: "i" } });
-        const filters = $and.length > 0 ? { $and } : {};
+        if (filters?.category) $and.push({ category: { $regex: filters.category, $options: "i" } });
+        const queryFilters = $and.length > 0 ? { $and } : {};
 
-        const products = await this.#productDAO.findAll(filters, params);
+        const options = {
+            page: parseInt(page, 10),
+            limit: parseInt(limit, 10),
+        };
+
+        const products = await this.#productDAO.findAll(queryFilters, options);
         const productsDTO = products?.docs?.map((product) => this.#productDTO.fromModel(product));
         products.docs = productsDTO;
 
-        return products;
+        const baseUrl = 'http://localhost:8080/api/products';
+        const { hasNextPage, nextPage, hasPrevPage, prevPage } = products;
+
+        return {
+            products: products.docs,
+            pagination: {
+                currentPage: options.page,
+                totalPages: products.totalPages,
+                nextPage: hasNextPage ? `${baseUrl}?page=${nextPage}&limit=${options.limit}` : null,
+                prevPage: hasPrevPage ? `${baseUrl}?page=${prevPage}&limit=${options.limit}` : null,
+                totalDocs: products.totalDocs
+            }
+        };
     }
 
     async findOneById(id) {
