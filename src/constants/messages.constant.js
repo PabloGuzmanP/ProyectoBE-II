@@ -18,8 +18,6 @@ export const ERROR_INSERT_DOCUMENT = "Error al insertar documento" ;
 export const ERROR_UPDATE_DOCUMENT = "Error al actualizar documento" ;
 export const ERROR_DELETE_DOCUMENT = "Error al eliminar documento" ;
 
-export const ERROR_NOT_ENOUGH_STOCK = "No hay suficiente stock del producto" ;
-
 export const JWT_TRANSLATIONS = {
     ["No auth token"]: ERROR_NOT_FOUND_TOKEN,
     ["jwt malformed"]: ERROR_INVALID_TOKEN,

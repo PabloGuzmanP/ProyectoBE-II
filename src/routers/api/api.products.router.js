@@ -14,7 +14,7 @@ export default class ProductsRouter extends BaseRouter {
     initialize() {
         const router = this.getRouter();
 
-        this.addGetRoute("/", [], currentUser, (req, res) => this.#productController.getAll(req, res));
+        this.addGetRoute("/", [USER], currentUser, (req, res) => this.#productController.getAll(req, res));
         this.addGetRoute("/:id", [USER], currentUser, (req, res) => this.#productController.getProductById(req, res));
         this.addPostRoute("/", [ADMIN], currentUser, (req, res) => this.#productController.createProduct(req, res));
         this.addPutRoute("/:id", [ADMIN], currentUser, (req, res) => this.#productController.updateProduct(req, res));

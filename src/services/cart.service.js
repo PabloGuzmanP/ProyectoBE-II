@@ -1,4 +1,4 @@
-import { ERROR_NOT_ENOUGH_STOCK, ERROR_NOT_FOUND_INDEX, ERROR_NOT_SAME_ID } from "../constants/messages.constant.js";
+import { ERROR_NOT_FOUND_INDEX, ERROR_NOT_SAME_ID } from "../constants/messages.constant.js";
 import CartRepository from "../repositories/cart.repository.js";
 import ProductService from "./product.service.js";
 import UserRepository from "../repositories/user.repository.js";
