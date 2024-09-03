@@ -1,11 +1,20 @@
-import { ERROR_NOT_FOUND_INDEX } from "../constants/messages.constant.js";
+import { ERROR_NOT_ENOUGH_STOCK, ERROR_NOT_FOUND_INDEX, ERROR_NOT_SAME_ID } from "../constants/messages.constant.js";
 import CartRepository from "../repositories/cart.repository.js";
+import ProductService from "./product.service.js";
+import UserRepository from "../repositories/user.repository.js";
+import TicketService from "./ticket.service.js"
 
 export default class CartService {
-    #cartRepository
+    #cartRepository;
+    #productService;
+    #ticketService;
+    #userRepository;
 
     constructor() {
         this.#cartRepository = new CartRepository();
+        this.#productService = new ProductService();
+        this.#ticketService = new TicketService();
+        this.#userRepository = new UserRepository();
     }
 
     async findAll(params) {
@@ -90,5 +99,43 @@ export default class CartService {
     async getCartById(cid) {
         const cart = await this.#cartRepository.getCartById(cid);
         return cart;
+    }
+
+    async purchasingProcess(cid, email){
+        const user = await this.#userRepository.findOneByEmail(email);
+        const cart = await this.#cartRepository.findOneById(cid);
+        const notAvailableProducts = [];
+        let amount = 0;
+
+        if(cid !== user.cart.toString()){
+            throw new Error(ERROR_NOT_SAME_ID);
+        } 
+        
+        for (let index = 0; index < cart.products.length; index++) {
+            const idProduct = cart.products[index].productId;
+            const quantityProduct = cart.products[index].quantity;
+            const product = await this.#productService.findOneById(idProduct);
+            
+            if (quantityProduct > product.stock) {
+                notAvailableProducts.push(product.title)
+            }else {
+                const newStock = product.stock - quantityProduct;
+                await this.#productService.updateOneById(idProduct, { stock: newStock });
+                amount += product.price * quantityProduct;
+            }
+        }
+
+        const ticketData = {
+            amount: amount,
+            purchaser: email
+        };
+        
+        const ticket = await this.#ticketService.createTicket(ticketData);
+
+        if(notAvailableProducts.length > 0){
+            return {ticket: ticket, processNotComplete: `No hay suficiente stock de: ${notAvailableProducts}`};
+        } else {
+            return {ticket: ticket};
+        }
     }
 }

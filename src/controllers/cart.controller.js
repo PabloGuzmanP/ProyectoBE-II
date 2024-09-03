@@ -132,4 +132,17 @@ export default class CartController {
             res.sendError(error);
         }
     }
+
+    async purchasingProcess(req, res) {
+        const { cid } = req.params;
+        const email = req.user.email;
+        
+        try {
+            const ticketPurchase = await this.#cartService.purchasingProcess(cid, email);
+            res.sendSuccess200(ticketPurchase);
+        } catch (error) {
+            res.sendError(error);
+        }
+    }
+    
 }

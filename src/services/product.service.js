@@ -1,4 +1,3 @@
-// import ProductDAO from "../daos/product.dao.js";
 import ProductRepository from "../repositories/product.repository.js";
 
 export default class ProductService {
@@ -24,11 +23,11 @@ export default class ProductService {
 
     async updateOneById(id, data){
         const currentProduct = await this.#productRepository.findOneById(id);
-
+        
         const product = await this.#productRepository.save({
             ...currentProduct,
             ...data,
-        });
+        });        
 
         return product;
     }

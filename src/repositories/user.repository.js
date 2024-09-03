@@ -34,6 +34,13 @@ export default class UserRepository {
         return this.#userDTO.fromModel(user);
     }
 
+    async findOneByEmail(email){   
+        const user = await this.#userDAO.findOneByCriteria({ email });        
+        if(!user) throw new Error(ERROR_NOT_FOUND_CREDENTIALS);
+
+        return this.#userDTO.fromModel(user);
+    }
+
     async findOneByEmailAndPassword(email, password){
         const user = await this.#userDAO.findOneByCriteria({ email });
         if(!user) throw new Error(ERROR_NOT_FOUND_CREDENTIALS);

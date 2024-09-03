@@ -1,5 +1,6 @@
 import BaseRouter from "../base.router.js";
 import { currentUser } from "../../middlewares/auth.middleware.js";
+import CartService from "../../services/cart.service.js";
 
 export default class CurrentRouter extends BaseRouter {
     constructor(){
@@ -19,6 +20,7 @@ export default class CurrentRouter extends BaseRouter {
     async #getCurrent (req, res) {
         try {
             const user = req.user;
+            
             res.sendSuccess200(user);
         } catch (error) {
             res.sendError(error);
